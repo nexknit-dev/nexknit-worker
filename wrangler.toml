@@ -1,4 +1,4 @@
-name = "nexknit-api"
+name = "nexknit-worker"
 main = "src/index.ts"
 compatibility_date = "2025-05-12"
 
