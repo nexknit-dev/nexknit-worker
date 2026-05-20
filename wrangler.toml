@@ -1,0 +1,31 @@
+name = "nexknit-api"
+main = "src/index.ts"
+compatibility_date = "2025-05-12"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"          # 把静态资源绑定到 Worker，变量名就是 ASSETS
+run_worker_first = true      # 所有请求都先让 Worker 代码处理
+
+[vars]
+API_KEY = "your-production-key"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nexknit-db"
+database_id = "8d7c1f92-5819-4d3f-a70c-82e2619dd78f"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1

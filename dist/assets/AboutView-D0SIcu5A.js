@@ -1,0 +1,1 @@
+import{b as e,l as t,o as n}from"./runtime-core.esm-bundler-B0XtTkcO.js";import{t as r}from"./_plugin-vue_export-helper-B80Cc4Ui.js";var i={},a={class:`about`};function o(r,i){return e(),t(`div`,a,[...i[0]||=[n(`h1`,null,`This is an about page`,-1)]])}var s=r(i,[[`render`,o],[`__scopeId`,`data-v-5cf45364`]]);export{s as default};
