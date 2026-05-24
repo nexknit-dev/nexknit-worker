@@ -1,0 +1,28 @@
+{
+  "name": "nexknit-worker",
+  "version": "1.0.0",
+  "description": "NexKnit Cloudflare Worker — receives metrics from nodes and powers the dashboard",
+  "main": "src/index.js",
+  "scripts": {
+      "deploy": "npx wrangler deploy",
+      "dev": "wrangler dev"
+  },
+  "keywords": ["nexknit", "monitoring", "cloudflare-worker"],
+  "author": "NexKnit",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "hono": "^4.12.18"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260511.1"
+  },
+  "cloudflare": {
+    "bindings": [
+      {
+        "type": "secret",
+        "name": "API_KEY",
+        "description": "Secret key for communication between NexKnit Gateway and this Worker. You can generate a strong random string using a password generator."
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+name = "nexknit-worker"
+main = "src/index.ts"
+compatibility_date = "2026-05-19"
+
+# === 静态资源托管 ===
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nexknit-db"
+
+# === Scheduled Trigger: Weekly cleanup ===
+# Runs every Sunday at 00:00 UTC to clear device_log (preserves nodes)
+[triggers]
+crons = ["0 0 * * 7"]
+
+# === 可观测性配置 (便于调试) ===
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
