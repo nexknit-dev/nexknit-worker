@@ -1,5 +1,7 @@
 # Nexknit — Free Self-Hosted Personal Node Cluster Dashboard
 
+[中文文档](README_CN.md) | English
+
 > No VPS required, no Hub required, no public IP required. 24/7 high-availability monitoring.
 > Deploy in three minutes and view data instantly in your browser.
 > Zero maintenance, zero dependencies, zero external attack surface.
