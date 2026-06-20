@@ -28,6 +28,7 @@ Nexknit Worker is the cloud component of the nexknit monitoring system. It is a 
 - **Receiving gateway pushes**: The gateway sends POST requests to `/api/push` every 5 seconds, carrying node status data
 - **Storing to D1**: Worker writes the payload as-is to the D1 database without any parsing
 - **Responding to frontend queries**: The frontend dashboard polls `/api/state` and `/api/nodes`, and Worker reads the latest data from D1 and returns it
+- **Offline notifications**: Worker checks for offline nodes during scheduled tasks and sends email alerts via Cloudflare Email Routing
 
 The Worker itself does not initiate any network connections, listen on any ports, or store any logs. It is a passive "mailbox" — data comes in from the gateway and waits for the frontend to retrieve it.
 
@@ -163,6 +164,25 @@ npx wrangler secret put API_KEY
 
 Follow the prompts to enter your secret key. The Worker will automatically read this environment variable as the authentication credential.
 
+#### Offline Notification Configuration (Optional)
+
+To enable email notifications when nodes go offline, set up the following environment variables:
+
+```bash
+npx wrangler secret put NOTIFICATION_EMAIL  # Your email address to receive alerts
+npx wrangler secret put MAIL_FROM           # Sender address (must be configured in Cloudflare Email Routing)
+```
+
+**Environment Variables**:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OFFLINE_THRESHOLD_MS` | `1800000` (30 minutes) | Time threshold in milliseconds before a node is considered offline |
+| `NOTIFICATION_EMAIL` | (empty) | Email address to receive offline alerts (leave empty to disable) |
+| `MAIL_FROM` | (empty) | Sender email address for notifications |
+
+**Prerequisite**: You need to configure [Cloudflare Email Routing](https://developers.cloudflare.com/email-routing/) to enable email sending.
+
 ---
 
 ### 🗄️ Database Design
@@ -237,7 +257,11 @@ Worker is configured with a weekly cleanup Cron Trigger:
 crons = ["0 0 * * 0"]  # Every Sunday at 00:00 UTC
 ```
 
-The scheduled task only cleans the `device_log` table and **does not** delete node registration information from the `nodes` table. Nodes can only be deleted via the `DELETE /api/nodes/:nodeName` API.
+The scheduled task performs two operations:
+
+1. **Cleanup**: Cleans the `device_log` table and **does not** delete node registration information from the `nodes` table. Nodes can only be deleted via the `DELETE /api/nodes/:nodeName` API.
+
+2. **Offline Check**: Checks for nodes that have been offline for longer than `OFFLINE_THRESHOLD_MS`. If any offline nodes are detected and email notifications are configured, an alert email will be sent to `NOTIFICATION_EMAIL`.
 
 ---
 

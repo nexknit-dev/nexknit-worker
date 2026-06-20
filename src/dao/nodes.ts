@@ -8,7 +8,7 @@ import { D1Database } from '@cloudflare/workers-types'
 
 /**
  * Upsert a node: insert if new, update updated_at if existing.
- * Returns void â€?errors are thrown by D1 on failure.
+ * Returns void ï¿½?errors are thrown by D1 on failure.
  */
 export async function upsertNode(
   db: D1Database,
@@ -64,4 +64,30 @@ export async function nodeExists(
     .first()
 
   return row !== null
+}
+
+/**
+ * Get all nodes that have been offline (no update for longer than threshold).
+ * @param db - D1Database instance
+ * @param thresholdMs - Time threshold in milliseconds
+ * @returns Array of offline nodes with their last update timestamp
+ */
+export async function getOfflineNodes(
+  db: D1Database,
+  thresholdMs: number
+): Promise<Array<{ node_name: string; updated_at: number; offline_duration_ms: number }>> {
+  const now = Date.now()
+  const cutoff = now - thresholdMs
+
+  const { results } = await db
+    .prepare(
+      `SELECT node_name, updated_at, ? - updated_at as offline_duration_ms
+       FROM nodes
+       WHERE updated_at < ?
+       ORDER BY updated_at ASC`
+    )
+    .bind(now, cutoff)
+    .all<{ node_name: string; updated_at: number; offline_duration_ms: number }>()
+
+  return results
 }

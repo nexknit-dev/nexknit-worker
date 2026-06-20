@@ -1,1 +1,4 @@
 API_KEY=your-api-key-here
+OFFLINE_THRESHOLD_MS=1800000
+NOTIFICATION_EMAIL=your-email@example.com
+MAIL_FROM=notifications@your-domain.com

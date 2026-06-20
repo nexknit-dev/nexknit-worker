@@ -32,3 +32,9 @@ invocation_logs = true
 enabled = false
 persist = true
 head_sampling_rate = 1
+
+# === 离线通知配置 ===
+[vars]
+OFFLINE_THRESHOLD_MS = "1800000"  # 30分钟（毫秒）
+NOTIFICATION_EMAIL = ""           # 通知邮件地址（留空则禁用邮件通知）
+MAIL_FROM = ""                    # 发件人地址（使用 Cloudflare Email Routing）
